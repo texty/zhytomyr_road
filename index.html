@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+
+body {
+    margin:0;
+}
+
+.gallery {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+img.desktop-only {
+    width: 100%;
+}
+
+img.mobile-only {
+    max-width: 100%;
+    max-height: 85vh;
+}
+
+.controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#playPauseButton {
+    background-color: transparent;
+    border: 0;
+    cursor: pointer;
+}
+
+.indicators {
+    display: flex;
+    gap: 5px; 
+}
+
+.indicator {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.indicator.active {
+    background-color: #222222;
+}
+
+
+.desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+@media(max-width: 800px) and (orientation: portrait){
+    .desktop-only {
+    display: none;
+}
+
+.mobile-only {
+    display: block;
+}
+
+}
+
+
+</style>
+<body>
+    <div class="gallery ">
+        <img id="image-d" class="desktop-only" src="img/3.jpg" alt="Image 1">
+        <img id="image-m" class="mobile-only" src="mobile/3.jpg" alt="Image 2">
+        <div class="controls">
+            <button id="playPauseButton"><img id="play-pause" style="width:30px;" src="play.png"></button>
+            <div id="progressIndicators" class="indicators">
+                <span class="indicator active"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+                <span class="indicator"></span>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+
+
+var images;
+var imageElement;
+
+images = window.innerWidth > 800 ?  ["img/3.jpg", "img/4.jpg", "img/5.jpg", "img/7.jpg", "img/8.jpg",
+"img/13.jpg", "img/25.jpg", "img/26.jpg", "img/last.jpg"]  : ["mobile/3.jpg", "mobile/4.jpg", "mobile/5.jpg", 
+"mobile/7.jpg", "mobile/8.jpg", "mobile/13.jpg", "mobile/25.jpg", "mobile/26.jpg", "mobile/last.jpg"]; 
+
+
+imageElement = window.innerWidth > 800 ? document.getElementById("image-d") : document.getElementById("image-m");
+
+
+const numImages = images.length;
+let currentImageIndex = -1; // Current image index
+let playing = false; 
+let intervalId; 
+
+const playPauseButton = document.getElementById("playPauseButton");
+const progressIndicators = document.getElementById("progressIndicators").querySelectorAll(".indicator");
+
+const preloadedImages = images.map((imageUrl) => {
+    const img = new Image();
+    img.src = imageUrl;
+    return img;
+});
+
+function changeImage() {
+    if (currentImageIndex === numImages - 1) {
+        // Last image
+        currentImageIndex = 0;
+    } else {
+        currentImageIndex++;
+    }
+  
+    updateProgressIndicators();
+    imageElement.src = preloadedImages[currentImageIndex].src;
+    
+}
+
+function togglePlayPause() {
+    if (playing) {
+        clearInterval(intervalId);
+        document.getElementById('play-pause').src = "play.png";
+    } else {
+        intervalId = setInterval(changeImage, 1000); 
+        document.getElementById('play-pause').src = "pause.png";
+    }
+    playing = !playing;
+}
+
+function updateProgressIndicators() {
+    progressIndicators.forEach((indicator, index) => {
+        if (index === currentImageIndex) {
+            indicator.classList.add("active");
+        } else {
+            indicator.classList.remove("active");
+        }
+    });
+}
+
+playPauseButton.addEventListener("click", togglePlayPause);
+
+progressIndicators.forEach((indicator, index) => {
+    indicator.addEventListener("click", () => {
+        console.log(index)
+        currentImageIndex = index-1;
+        changeImage();
+        playing = false;
+        clearInterval(intervalId);
+        document.getElementById('play-pause').src = "play.png";
+    });
+});
+
+changeImage();
+updateProgressIndicators();
+
+
+
+</script>
+</body>
+</html>
