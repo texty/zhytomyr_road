@@ -83,10 +83,10 @@ img.mobile-only {
 </style>
 <body>
     <div class="gallery ">
-        <img id="image-d" class="desktop-only" src="img/3.jpg" alt="Image 1">
-        <img id="image-m" class="mobile-only" src="mobile/3.jpg" alt="Image 2">
+        <img id="image-d" class="desktop-only" src="https://texty.github.io/zhytomyr_road/img/3.jpg" alt="Image 1">
+        <img id="image-m" class="mobile-only" src="https://texty.github.io/zhytomyr_road/mobile/3.jpg" alt="Image 2">
         <div class="controls">
-            <button id="playPauseButton"><img id="play-pause" style="width:30px;" src="play.png"></button>
+            <button id="playPauseButton"><img id="play-pause" style="width:30px;" src="https://texty.github.io/zhytomyr_road/play.png"></button>
             <div id="progressIndicators" class="indicators">
                 <span class="indicator active"></span>
                 <span class="indicator"></span>
@@ -107,6 +107,7 @@ img.mobile-only {
 
 var images;
 var imageElement;
+var ROOT = 'https://texty.github.io/zhytomyr_road/'
 
 images = window.innerWidth > 800 ?  ["img/3.jpg", "img/4.jpg", "img/5.jpg", "img/7.jpg", "img/8.jpg",
 "img/13.jpg", "img/25.jpg", "img/26.jpg", "img/last.jpg"]  : ["mobile/3.jpg", "mobile/4.jpg", "mobile/5.jpg", 
@@ -126,7 +127,7 @@ const progressIndicators = document.getElementById("progressIndicators").querySe
 
 const preloadedImages = images.map((imageUrl) => {
     const img = new Image();
-    img.src = imageUrl;
+    img.src = ROOT + imageUrl;
     return img;
 });
 
@@ -146,10 +147,10 @@ function changeImage() {
 function togglePlayPause() {
     if (playing) {
         clearInterval(intervalId);
-        document.getElementById('play-pause').src = "play.png";
+        document.getElementById('play-pause').src = ROOT+"play.png";
     } else {
         intervalId = setInterval(changeImage, 1000); 
-        document.getElementById('play-pause').src = "pause.png";
+        document.getElementById('play-pause').src = ROOT+"pause.png";
     }
     playing = !playing;
 }
