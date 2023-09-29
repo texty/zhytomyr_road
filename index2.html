@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<script src='https://texty.org.ua/documents/80/jquery-3.3.1.js'></script>
+<script src='https://texty.org.ua/documents/149/scrollama.min.js'></script>
+<script src="https://texty.org.ua/documents/12/d3v5.min.js"></script>
+
+<style>
+    .container {
+        position: relative;
+        width: calc(100% + 2em);
+        margin-left: -1em;
+        /* height: 2500px; */
+    }
+
+    .image-container {
+        width: 100%;
+        height: 0;
+        padding-top: 55%;
+        position: sticky;
+        top: 0;
+        background-size: cover;
+    }
+  
+
+    #scroll {      
+        grid-column:1/-1;
+        position: relative;
+        width: 100%;
+        margin: auto;        
+    }
+  
+  .scroll__graphic {        
+        width: 100%;  
+        position: -webkit-sticky;
+        position: sticky;
+        top: 5vh;
+        left: 0;
+        max-height: 100vh;
+    }   
+    
+     /* @media(max-width: 800px){
+        .scroll__graphic {  
+            top: 30vh;
+        }
+    } */
+
+    .scroll__text {         
+        width: 80%;    
+        margin: auto;
+        grid-row: 1/2;
+        z-index: 100;
+    }
+    
+    .step div{
+       height: 250px;
+       margin-bottom: 10px;
+    } 
+
+    #gif-pic {
+        width: 100%;
+    }
+
+    .desktop-only {
+    display: block;
+}
+
+.mobile-only {
+    display: none;
+}
+
+@media(max-width: 800px) and (orientation: portrait){
+    .desktop-only {
+    display: none;
+}
+
+.mobile-only {
+    display: block;
+}
+
+}
+
+#gif-pic-mobile {
+    max-width: 100%;
+    max-height: 90vh;
+    margin: auto;
+}
+</style>
+
+<section id='scroll'>
+        <div class='scroll__graphic sticky'>
+            <img id='gif-pic' class="desktop-only" src='https://texty.github.io/zhytomyr_road/img/1.jpg' />   
+            <img id='gif-pic-mobile' class="mobile-only" src='https://texty.github.io/zhytomyr_road/mobile/1.jpg' />                
+        </div>
+    
+    
+        <div class='scroll__text'></div>
+    </section>
+
+<script>
+    var Images = {}
+    var imgFolder;
+    var imgId;
+
+    function reload(){
+   
+    Images = {}
+    if (window.matchMedia("(orientation: portrait)").matches && window.innerWidth < 800) {
+        imgFolder = 'mobile'
+        imgId = '#gif-pic-mobile'
+        console.log("mobile")
+
+    } else {
+        imgFolder = 'img'
+        imgId = '#gif-pic'
+    }
+
+    $(imgId).attr("src", "https://texty.github.io/zhytomyr_road/"+ imgFolder + "/1.jpg")
+    d3.select(".scroll__text").html("");
+    // document.getElementById("scroll").scrollIntoView();
+
+
+    for(var i = 1; i <= 9; i++){
+        Images[i] = "https://texty.github.io/zhytomyr_road/"+ imgFolder + "/"+ i + ".jpg"
+        
+        d3.select(".scroll__text")
+            .append("div")
+            .attr("class", "step")
+            .append("div")
+        }
+    }
+
+   
+
+    console.log(Images)
+
+
+
+    var container = document.querySelector('#scroll');
+    var graphic = document.querySelector('#scroll > .scroll__graphic'); 
+    var text = document.querySelector('#scroll > .scroll__text'); 
+    var step = document.querySelector('#scroll > .scroll__text > .step'); 
+    var scroller = scrollama();
+
+    function handleStepEnter(r) {  
+        $(imgId).attr("src", Images[r.index])
+    
+    }
+
+    function init() {   
+   
+
+
+        scroller.setup({
+            container: '#scroll',
+            graphic: '.scroll__graphic',
+            text: '.scroll__text',
+            step: '.scroll__text .step',
+            offset: 0.80,
+            debug: false,
+            progress: true,
+            threshold: 5
+        })
+            .onStepEnter(handleStepEnter)
+            ;
+    
+    }
+
+    window.onresize = function(event) {
+        reload()
+        init()
+};
+
+    // window.on("resize", init)
+    reload()
+    init();
+
+</script>
+</body>
+</html>
